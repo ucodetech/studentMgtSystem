@@ -13,15 +13,23 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->string('uniqueid')->unique();
+            $table->string('photo')->default('default.png');
             $table->string('name');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
+            $table->string('phone_no', 15)->unique();
+            $table->string('department');
+            $table->string('level');
+            $table->string('matric_no', 50)->unique();
+            $table->timestamp('last_login');
+            $table->enum('status', ['active', 'inactive'])->default('inactive');
+            $table->tinyInteger('email_verified')->default(0);
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
         });
     }
-
+    
     /**
      * Reverse the migrations.
      */

@@ -22,9 +22,9 @@ class RedirectIfAuthenticated
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
                 // return redirect(RouteServiceProvider::HOME);
-                if($guard === 'admin'){
+                if($guard == 'admin'){
                     return redirect()->route('admin.ad.dashboard');
-                }elseif($guard === 'lecturer'){
+                }elseif($guard == 'lecturer'){
                     return redirect()->route('lecturer.lec.dashboard');
                 }
                     return redirect()->route('student.std.dashboard');

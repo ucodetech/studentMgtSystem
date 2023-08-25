@@ -183,6 +183,8 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
+        'EmailHelper' => App\Helpers\EmailHelper::class,
+        'GeneralHelper' => App\Helpers\GeneralHelper::class,
     ])->toArray(),
 
 ];

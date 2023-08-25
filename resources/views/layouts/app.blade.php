@@ -30,7 +30,17 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
-
+                        @if (Auth::guard('admin')->check())
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('admin.ad.dashboard') }}">Dashboard</a>
+                        </li>
+                        @else
+                            @if (Route::has('admin.ad.login'))
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('admin.ad.login') }}">Login</a>
+                                </li>
+                            @endif
+                        @endif
                     </ul>
 
                     <!-- Right Side Of Navbar -->
