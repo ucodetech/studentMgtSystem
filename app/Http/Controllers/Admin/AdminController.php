@@ -16,8 +16,7 @@ use Illuminate\Support\Carbon;
 use App\Models\VerifyAdminEmail;
 use Illuminate\Support\Str;
 
-use function PHPUnit\Framework\isNull;
-use function PHPUnit\Framework\returnSelf;
+
 
 class AdminController extends Controller
 {
@@ -74,7 +73,7 @@ class AdminController extends Controller
                     'created_at' => Carbon::now()
                 ]);
                 $message = "Hi " . $admin->admin_fullname;
-                $message .="You have been added to CSAS Admin panel, please full the intsruction below to verify your email address!";
+                $message .="You have been added to CSAS Admin panel, please follow the intsruction below to verify your email address!";
                 $mail_data = [
                         'from' => 'gtechnoproject22@gmail.com',
                         'to' => $admin->admin_email,

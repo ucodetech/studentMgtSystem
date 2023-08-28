@@ -26,4 +26,8 @@ class Lecturer extends Authenticatable
                         'locked_out',
                         'date_locked_out'
                  ];
+
+    public static function getLecturerById($id){
+        return self::where('id', $id)->first();
+    }
 }

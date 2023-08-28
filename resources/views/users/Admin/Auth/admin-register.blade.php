@@ -47,12 +47,13 @@
                 </div>
                 <div class="d-grid gap-2 mt-3">
                     <button type="submit" class="btn btn-lg btn-primary">Sign up</button>
+                    <div class="text-center mb-3">
+                        <a href="{{ route('admin.ad.superusers') }}">Back to superusers</a>
+                    </div>
                 </div>
             </form>
         </div>
     </div>
 </div>
-<div class="text-center mb-3">
-    Already have account? <a href="{{ route('admin.ad.login') }}">Log In</a>
-</div>
+
 @endsection

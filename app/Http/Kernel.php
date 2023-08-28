@@ -67,6 +67,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'is_locked_out' =>\App\Http\Middleware\IsLockedOut::class,
         'is_logged_in' =>\App\Http\Middleware\IsLoggedIn::class,
+        'is_lect_logged_in' =>\App\Http\Middleware\IsLectLoggedIn::class,
 
     ];
 }

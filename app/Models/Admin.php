@@ -13,17 +13,24 @@ class Admin extends Authenticatable
     protected $guard = "admin";
 
     protected $fillable = [
-                        'admin_uniqueid',
-                        'admin_fullname',
-                        'admin_email',
-                        'admin_tel',
-                        'email_verified',
-                        'admin_permission',
-                        'password',
-                        'admin_photo',
-                        'status',
-                        'admin_last_login',
-                        'locked_out',
-                        'date_locked_out'
+    'admin_uniqueid',
+    'admin_fullname',
+    'admin_email',
+    'admin_tel',
+    'email_verified',
+    'admin_permission',
+    'password',
+    'admin_photo',
+    'status',
+    'admin_last_login',
+    'locked_out',
+    'date_locked_out'
                  ];
+
+
+    public static  function getAdminById($id){
+        return self::where('id', $id)->first();
+    }
+
+
 }

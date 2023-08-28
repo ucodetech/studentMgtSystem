@@ -70,7 +70,9 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    // 'timezone' => 'UTC',
+    'timezone' => env('APP_TIMEZONE', 'UTC'),
+
 
     /*
     |--------------------------------------------------------------------------
@@ -185,6 +187,7 @@ return [
         // 'Example' => App\Facades\Example::class,
         'EmailHelper' => App\Helpers\EmailHelper::class,
         'GeneralHelper' => App\Helpers\GeneralHelper::class,
+        'Debugbar' => Barryvdh\Debugbar\Facades\Debugbar::class,
     ])->toArray(),
 
 ];
