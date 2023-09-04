@@ -13,4 +13,9 @@ class ClassRoom extends Model
     public static function getClassById($id){
         return self::where('id', $id)->first();
     }
+
+    public function classschedules()
+    {
+        return $this->hasMany(Schedule::class);
+    }
 }

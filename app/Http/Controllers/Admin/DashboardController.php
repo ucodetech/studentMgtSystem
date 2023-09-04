@@ -6,7 +6,9 @@ use App\Helpers\EmailHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use App\Helpers\GeneralHelper;
+use App\Models\ClassSchedule;
 use App\Models\Lecturer;
+use App\Models\User;
 use App\Models\VerifyLecturerEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -396,18 +398,172 @@ class DashboardController extends Controller
     }
 
 
-    //update last login
-
-    // public function updateLecturerLastLogin(){
-    //     $id = lecturer()->id;
-    //     GeneralHelper::updateLastLogin(Lecturer::class,$id, "	lecturer_last_login");
-    //     return true;
-    // }
-
+ 
     public function deleteLecturer(Request $request){
         $id = $request->id;
         Lecturer::where('id', $id)->delete();
         return "Lecturer Deleted!";
     }
+
+
+    public function getRealTimeData(){
+        $schedule_count = ClassSchedule::all()->count();
+        $schedule_active_count = ClassSchedule::where('status', 'open')->count();
+        $schedule_closed_count = ClassSchedule::where('status', 'closed')->count();
+        $students_count = User::all()->count();
+
+        $response['schedule_count'] = $schedule_count;
+        $response['schedule_active_count'] = $schedule_active_count;
+        $response['schedule_closed_count'] = $schedule_closed_count;
+        $response['students_count'] = $students_count;
+
+        return response()->json($response);
+
+
+    }
+//students
+    public function Students(){
+        $students = User::all();
+        $departments = DB::table('department')->orderBy('department_name', 'asc')->get();
+        return view('users.Admin.Pages.Students.admin-students', ['students'=>$students, 'departments'=>$departments]);
+    }
+
+    public function toggleStudentStatus(Request $request){
+        $mode = $request->mode;
+        $id = $request->id;
+
+        if($mode == 'inactive'){
+            $locked = 1;
+            $datelocked = Carbon::now();
+            $email_verified = 0;
+        }else{
+            $locked = 0;
+            $datelocked = null;
+            $email_verified = 1;
+        }
+
+        User::where('id', $id)->update([
+            'status'=> $mode,
+            'locked_out' => $locked,
+            'date_locked_out' =>  $datelocked,
+            'email_verified' => $email_verified
+        ]);
+        return true;
+       
+    }
+
+    public function studentDetails(Request $request){
+        $id = $request->id;
+        $student = User::getUserById($id);
+        $data = "";
+
+        $data.='<div class="row">
+        <div class="col-md-4 col-xl-3">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="card-title mb-0"> '. userFirstName($student->name) ."'s" .' Profile Details</h5>
+                </div>
+                <div class="card-body text-center">
+                    <div id="previewPhoto">
+                        <label for="photo" class="cursor-pointer">
+                        <img src="'. asset('storage/uploads/userProfile/'. $student->photo) .'" alt="'.userFirstName($student->name) .'" class="img-fluid rounded-circle mb-2" width="128" height="128" />
+                        </label>
+                    </div>
+                      
+                    <h5 class="card-title mb-0">'. $student->name .'</h5>
+                    <div class="text-muted mb-2">Student</div>
+                  
+                </div>
+               
+                <hr class="my-0" />
+                <div class="card-body">
+                    <h5 class="h6 card-title">Social Handles</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-1"><a href="#">staciehall.co</a></li>
+                        <li class="mb-1"><a href="#">Twitter</a></li>
+                        <li class="mb-1"><a href="#">Facebook</a></li>
+                        <li class="mb-1"><a href="#">Instagram</a></li>
+                        <li class="mb-1"><a href="#">LinkedIn</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    
+        <div class="col-md-8 col-xl-9">
+            <div class="card">
+                <div class="card-header">
+    
+                    <h5 class="card-title mb-0">Details  <span class="badge text-bg-info badge-btn">'.$student->uniqueid.'</span></h5>
+                </div>
+                <div class="card-body h-100">
+                        <div class="container mt-3">
+                            
+                                <div class="mb-3 row">
+                                    <label for="fullname" class="col-4 col-form-label">Name</label>
+                                    <div class="col-8">
+                                        <input type="text" class="form-control" name="fullname" id="fullname" placeholder="fullname" value="'.$student->name.'">
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label for="email" class="col-4 col-form-label">Email</label>
+                                    <div class="col-8">
+                                        <input type="email" class="form-control" name="email" id="email" placeholder="email" value="'.$student->email.'" disabled>
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label for="tel" class="col-4 col-form-label">Phone Number</label>
+                                    <div class="col-8">
+                                        <input type="tel" class="form-control" name="tel" id="tel" placeholder="tel phone" value="'.$student->phone_no.'">
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                <label for="department" class="col-4 col-form-label">Department</label>
+                                <div class="col-8">
+                                    <input type="tel" class="form-control" name="department" id="department" placeholder="tel phone" value="'.$student->department.'">
+                                </div>
+                            </div>  
+                            <div class="mb-3 row">
+                            <label for="department" class="col-4 col-form-label">Level</label>
+                            <div class="col-8">
+                                <input type="tel" class="form-control" name="department" id="department" placeholder="tel phone" value="'.$student->level.'">
+                            </div>
+                        </div>  
+                        <div class="mb-3 row">
+                        <label for="department" class="col-4 col-form-label">Matric No</label>
+                            <div class="col-8">
+                                <input type="tel" class="form-control" name="department" id="department" placeholder="tel phone" value="'.$student->matric_no.'">
+                            </div>
+                         </div>  
+                            <div class="mb-3 row">
+                            <label for="status" class="col-4 col-form-label">Status</label>
+                            <div class="col-8">
+                                <input type="tel" class="form-control" name="status" id="status" placeholder="tel phone" value="'.$student->status.'">
+                            </div>
+                        </div>                    
+                        </div>
+                        Date Created: '.pretty_dates($student->created_at).' <br/>
+                        
+                        Last Login: '.timeAgo($student->last_login).'
+                </div>
+            </div>
+        </div>
+        </div>';
+
+        return $data;
+    }
+
+
+ 
+    public function deleteStudent(Request $request){
+        $id = $request->id;
+        Lecturer::where('id', $id)->delete();
+        return "Lecturer Deleted!";
+    }
+
+
+
+
+
+
 
 }

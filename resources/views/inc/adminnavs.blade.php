@@ -27,8 +27,8 @@
                  <i class="align-middle" data-feather="users"></i> <span class="align-middle">Lecturers</span>
                 </a>
             </li>
-            <li class="sidebar-item {{ $title == "Profile" ? " active" : "" }}">
-                <a class="sidebar-link" href="{{ route('admin.ad.profile') }}">
+            <li class="sidebar-item {{ $title == "Students" ? " active" : "" }}">
+                <a class="sidebar-link" href="{{ route('admin.ad.students') }}">
                  <i class="align-middle" data-feather="user"></i> <span class="align-middle">Students</span>
                 </a>
             </li>
@@ -37,7 +37,16 @@
                  <i class="align-middle" data-feather="home"></i> <span class="align-middle">Class Rooms</span>
                 </a>
             </li>
-           
+            <li class="sidebar-item {{ $title == "Courses" ? " active" : "" }}">
+                <a class="sidebar-link" href="{{ route('admin.ad.courses') }}">
+                 <i class="align-middle" data-feather="book"></i> <span class="align-middle">Courses</span>
+                </a>
+            </li>
+            <li class="sidebar-item {{ $title == "Schedules" ? " active" : "" }}">
+                <a class="sidebar-link" href="{{ route('admin.ad.schedules') }}">
+                 <i class="align-middle" data-feather="clock"></i> <span class="align-middle">Schedule</span>
+                </a>
+            </li>
         </ul>
     </div>
 </nav>

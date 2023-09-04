@@ -22,12 +22,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Location</label>
-                                <select name="class_location" id="class_location" class="form-select">
-                                    <option value="">Select location</option>
-                                    @foreach ($schools as $school)
-                                        <option value="{{ $school->school }}">{{ $school->school }}</option>
-                                    @endforeach
-                                </select>
+                                <textarea class="form-control form-control-lg" id="class_location" name="class_location" placeholder="" >{{ old('class_location') }}</textarea>
                                 <span class="text-error text-danger class_location_error"></span>
                             </div>
                            
@@ -60,6 +55,35 @@
         </div>
     </div>
     
+</div>
+
+
+<!-- Modal Body -->
+<!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
+<div class="modal fade" id="editClassModal" tabindex="-1" 
+data-bs-backdrop="static" 
+data-bs-keyboard="false" 
+role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-top" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitleId">Edit Class Room</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" >
+                <form action="{{ route('admin.ad.class.room.update') }}" method="POST" id="editClassRoomForm">
+                    @csrf
+                    @method("POST")
+                    <div class="row" id="showRoomEditForm">
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 @endsection
@@ -99,16 +123,18 @@
             success:function(data){
                 if(data.code == 0){
                     $.each(data.error, function(prefix, val){
-                        $(form).find('span.'+prefix+'_error').text([0]);
+                        $(form).find('span.'+prefix+'_error').text(val[0]);
                     });
                 }else{
+                    $('#addclassRoomForm')[0].reset();
+                    $('#classroomTable').DataTable().ajax.reload(null,false);
                     toastr.success(data.msg);
                 }
             }
         });
     })
 
-        $('body').on('click', '.deleteClassRoom', function(e){
+    $('body').on('click', '.deleteClassBtn', function(e){
         e.preventDefault();
         let id = $(this).data('id');
         let url = $(this).data('url');
@@ -129,8 +155,7 @@
                         data,
                         'success'
                         );
-
-                        location.reload();
+                        $('#classroomTable').DataTable().ajax.reload(null,false);
                 })
             }
         });
@@ -138,8 +163,48 @@
         })
 
 
+        $('body').on('click', '.editClassBtn', function(e){
+            e.preventDefault();
+            let id = $(this).data('id');
+            let url = $(this).data('url');
+            let _token = "{{ csrf_token() }}";
+            $.get(url, {id:id, _token:_token}, function(data){
+                $('#editClassModal').modal('show');
+                $('#showRoomEditForm').html(data);
+            })
+        })
+
+        $('#editClassRoomForm').on('submit', function(e){
+        e.preventDefault();
+        let form = this;
+        $.ajax({
+            url:$(form).attr('action'),
+            method:$(form).attr('method'),
+            data:new FormData(form),
+            processData:false,
+            contentType:false,
+            cache:false,
+            beforeSend:function(){
+                $(form).find('span.text-error').text('');
+            },
+            success:function(data){
+                if(data.code == 0){
+                    $.each(data.error, function(prefix, val){
+                        $(form).find('span.'+prefix+'_error').text(val[0]);
+                    });
+                }else{
+                    $('#editClassModal').modal("hide");
+                    $('#classroomTable').DataTable().ajax.reload(null,false);
+                    toastr.success(data.msg);
+                }
+            }
+        });
+    })
+
           
 
-        })
+})
+   
+   
    </script>
 @endsection

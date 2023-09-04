@@ -6,7 +6,7 @@ $title = Str::ucfirst($title[1]);
 
 <h1 class="h3 mb-3">
     <strong>
-        {{ loggedAs() }}
+        {{ loggedAsAdmin() ?? loggedAsLecturer() }}
      
     </strong> 
     {{ $title }}

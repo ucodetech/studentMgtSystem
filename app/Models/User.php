@@ -53,4 +53,25 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+
+    /**
+     * Get the ongoingclass that owns the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function ongoingclass()
+    {
+        return $this->hasOne(OngingClass::class);
+    }
+
+    public function attendance()
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
+    public static function getUserById($id){
+        return self::where('id', $id)->first();
+    }
+
 }

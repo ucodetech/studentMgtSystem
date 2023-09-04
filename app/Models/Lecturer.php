@@ -30,4 +30,25 @@ class Lecturer extends Authenticatable
     public static function getLecturerById($id){
         return self::where('id', $id)->first();
     }
+
+
+    /**
+     * Get all of the courses for the Lecturer
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function course()
+    {
+        return $this->hasMany(Course::class);
+    }
+
+    /**
+     * Get all of the schedule for the Lecturer
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function schedule()
+    {
+        return $this->hasMany(ClassSchedule::class);
+    }
 }

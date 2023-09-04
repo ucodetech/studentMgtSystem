@@ -26,24 +26,52 @@ function student(){
     }
 }
 
-
+function formatTime($time){
+    return date("g:ia", strtotime($time));
+}
 
 function carbonNow(){
     return \Illuminate\Support\Carbon::now();
 }
+function carbonToday(){
+    $today = \Illuminate\Support\Carbon::today();
+    return pretty_dated($today);
+}
+function carbonCreate($date){
+    return \Illuminate\Support\Carbon::createFromDate($date);
+}
 
-function loggedAs(){
+function loggedAsLecturer(){
+    if(auth('lecturer')->check())
+        return "Lecturer";
+   
+}
+function loggedAsAdmin(){
     if(auth('admin')->check())
-           return ucfirst(admin()->admin_permission);
-        elseif(auth('lecturer')->check())
-            return "Lecturer";
-        else
-            return "Student";
+        return ucfirst(admin()->admin_permission);
+    
+}
+function loggedAsStudent(){
+    if(auth('web')->check())
+        return "Student";
 }
 
 function userFirstName($user){
-    $fname = explode(' ', $user);
-    return $fname[0];
+    if(str_starts_with($user, "Mr") || str_starts_with($user, "Mrs")){
+        $fname = explode(' ', $user);
+        return $fname[1];
+    }else{
+        $fname = explode(' ', $user);
+        return $fname[0];
+    }
+}
+
+function getMacAddress(){
+    return substr(exec('getmac'), 0,17);
+}
+
+function getMacAddressShell(){
+    return substr(shell_exec('getmac'), 159,20);
 }
 
 function generateKey(){
@@ -142,6 +170,9 @@ function pretty_time1($time){
 function pretty_nameDay($day){
     return date('D d  M, Y');
 }
+
+
+
 function timeAgo($time){
     date_default_timezone_set('Africa/Lagos');
     $time = strtotime($time) ? strtotime($time) : $time;

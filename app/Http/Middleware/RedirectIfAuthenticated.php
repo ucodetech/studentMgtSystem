@@ -27,7 +27,7 @@ class RedirectIfAuthenticated
                 }elseif($guard == 'lecturer'){
                     return redirect()->route('lecturer.lect.dashboard');
                 }
-                    return redirect()->route('student.std.dashboard');
+                    return redirect()->route('user.user.dashboard');
             }
         }
 
