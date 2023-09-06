@@ -121,7 +121,7 @@ class CourseController extends Controller
         if($validator->fails()){
             return response()->json(['code'=>0, 'error'=>$validator->errors()->toArray()]);
         }else{
-             Course::where('id', $request->course_id)->update([
+            $save =  Course::where('id', $request->course_id)->update([
                         'course_title' => $request->course_title,
                         'course_code' => $request->course_code,
                         'semester' => $request->semester,
@@ -130,8 +130,12 @@ class CourseController extends Controller
                         'lecturer_id' => $request->lecturer,
                         'updated_at' => Carbon::now()
              ]);
-             session()->put('success', "Course Updated successfully!");
-             return response()->json(['code'=>1, 'msg'=>"Course updated!"]);
+             if($save){
+                session()->put('success', "Course Updated successfully!");
+                // session()->forget('success');
+              return response()->json(['code'=>1, 'msg'=>"Course Updated successfully!"]);
+             }
+             
             
              
         }

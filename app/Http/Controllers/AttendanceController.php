@@ -68,7 +68,7 @@ class AttendanceController extends Controller
 
         ]);
         $markedas = $mode == 1 ? " present" : " absent";
-        return response()->json("Student marked! ".$markedas);
+        return response()->json("Attendance marked! ".$markedas);
     }
 
 

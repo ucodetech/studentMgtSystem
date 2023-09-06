@@ -50,6 +50,7 @@ Route::prefix('admin')->name('admin.')->group(function(){
             Route::get('/invalid-token', 'adminInvalidToken')->name('ad.invalid.token');
             Route::post('/resend-admin-token', 'resendAdminToken')->name('ad.resend.token');
            
+           
         });
     });
     Route::middleware(['auth:admin', 'is_locked_out', 'is_logged_in'])->group(function () {
@@ -161,7 +162,8 @@ Route::prefix('user')->name('user.')->group(function(){
 
         });
         Route::controller(AttendanceController::class)->group(function () {
-            Route::post('/student-mark-student/{student_id}', 'makeStudent')->name('lect.mark.student');
+            Route::post('/student-mark-attendance', 'markStudent')->name('user.mark.attendance');
+
 
         });
     });

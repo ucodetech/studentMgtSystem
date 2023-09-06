@@ -15,6 +15,7 @@ class ClassSchedule extends Model
         'start_time',
         'end_time',
         'lecturer_id',
+        'level',
         'start',
         'attendance'
     ];

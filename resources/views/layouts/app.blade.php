@@ -42,6 +42,19 @@
                             @endif
                         @endif
                     </ul>
+                    <ul class="navbar-nav me-auto">
+                        @if (Auth::guard('lecturer')->check())
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('lecturer.lect.dashboard') }}">Dashboard</a>
+                        </li>
+                        @else
+                            @if (Route::has('lecturer.lect.login'))
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('lecturer.lect.login') }}">Lecturer Login</a>
+                                </li>
+                            @endif
+                        @endif
+                    </ul>
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">

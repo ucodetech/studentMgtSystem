@@ -13,6 +13,8 @@ use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use App\Models\User;
+use App\Helpers\EmailHelper;;;
 
 class ClassScheduleController extends Controller
 {
@@ -111,9 +113,9 @@ class ClassScheduleController extends Controller
             //check if start time and end time is less than 8am or greater than 4pm
             // return response()->json(['code'=>2, 'err'=>formatTime($request->start_time) . '   ' . formatTime($request->end_time)]);
             
-            if(formatTime($request->start_time) < "8:00am" || formatTime($request->end_time) > "4:00pm"){
-                return response()->json(['code'=>2, 'err'=>"You can not schedule class below 8:00am and above 4:00pm!"]);
-            }
+            // if(formatTime($request->start_time) < "8:00am" || formatTime($request->end_time) > "4:00pm"){
+            //     return response()->json(['code'=>2, 'err'=>"You can not schedule class below 8:00am and above 4:00pm!"]);
+            // }
 
             if($request->dayOfWeek != pretty_dated($request->start_time) || $request->dayOfWeek != pretty_dated($request->end_time)){
                 return response()->json(['code'=>2, 'err'=>"Day of week, start time and end time date should be the same!"]);
@@ -159,6 +161,22 @@ class ClassScheduleController extends Controller
             $schedule->created_at = Carbon::now();
 
             if($schedule->save()){
+                $students = User::where('level', $schedule->level)->get();
+                foreach ($students as $user){
+                    $link = route('user.user.login');
+                    $message = "Hi " . $user->name;
+                    $message .=" A new schedule have been made for your class! Kindly login to your portal to check out the schedule details";
+                    $mail_data = [
+                            'from' => 'gtechnoproject22@gmail.com',
+                            'to' => $user->email,
+                            'toName' => $user->name,
+                            'subject' => 'Class Scheduled',
+                            'body' => $message,
+                            'actionLink' => $link,
+                            'actionLinkText' => "Login"
+                    ];
+                    EmailHelper::GsendMail($mail_data);
+            }
                 return response()->json(['code'=>1, 'msg'=>"Class Scheduled!"]);
             }else{
                 return false; 

@@ -26,7 +26,7 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Phone No</label>
-                    <input class="form-control form-control-lg" type="tel" id="admin_tel" name="admin_tel" placeholder="Enter your phone no" value="{{ old('admin_tel') }}" />
+                    <input class="form-control form-control-lg" type="tel" id="admin_tel" name="admin_tel" placeholder="Enter your phone no" value="{{ old('admin_tel') }}" minlength="11" maxlength="11" />
                 </div>
                 <div class="mb-3">
                     <label for="admin_permission" class="form-label">Permission</label>

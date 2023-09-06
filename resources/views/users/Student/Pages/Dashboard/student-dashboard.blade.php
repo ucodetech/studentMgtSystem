@@ -35,9 +35,19 @@
                             <hr>
                             @if ($onging !=null)
                                 @if ($running->attendance == 1)
-                                 <button type="button" data-id="{{ $running->id }}" id="markAttendaceBtn" class="btn btn-outline-danger btn-block">Mark Present</button>                                
+                                    @if($attended == null)
+                                        <button type="button" 
+                                        data-id="{{ $running->id }}" 
+                                        data-student-id="{{ student()->id }}" 
+                                        data-schedule-id="{{ $running->id }}" 
+                                        id="markPresent"
+                                        data-mode="1"
+                                        class="btn btn-outline-success btn-block">Mark Present</button>  
+                                    @else
+                                        <button type="button" id="openAttendaceBtn" class="btn btn-outline-warning btn-block">You have marked your attendance!</button>  
+                                    @endif                              
                             @else
-                                <button type="button" data-id="{{ $running->id }}" data-mode="1" id="openAttendaceBtn" class="btn btn-outline-warning btn-block">The lecturer is yet to open attendance for this class or is taking attendance him/herself</button>
+                                <button type="button" id="openAttendaceBtn" class="btn btn-outline-warning btn-block">The lecturer is yet to open attendance for this class or is taking attendance him/herself</button>
                             @endif
                             @else
                                 <button type="button" data-student-id="{{ student()->id }}" data-id="{{ $running->id }}" id="joinClassBtn" class="btn btn-outline-info btn-block">Join Class</button> 
@@ -101,6 +111,19 @@
                 }
             });
 
+            $('body').on('click', '#markPresent', function(e){
+                    e.preventDefault();
+                    let url = "{{ route('user.user.mark.attendance') }}";
+                    let mode = $(this).data('mode');
+                    let student_id = $(this).data('student-id');
+                    let schedule_id = $(this).data('schedule-id');
+                    let _token = "{{ csrf_token() }}";
+                    $.post(url, {mode:mode,student_id:student_id,schedule_id:schedule_id,_token:_token}, 
+                    function(response){
+                        toastr.info(response);
+                        location.reload();
+                    })
+                })         
 
 
         $('body').on('click', '#joinClassBtn', function(e){
@@ -130,8 +153,9 @@
                             data,
                             'success'
                         );
+                        setTimeout(() => {
                         location.reload();
-
+                        }, 4000);
                     })
                 }
             })

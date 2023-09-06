@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Helpers\GeneralHelper;
 use App\Http\Controllers\Controller;
+use App\Models\Attendance;
 use App\Models\ClassSchedule;
 use App\Models\Course;
 use App\Models\OngoingClass;
@@ -24,9 +25,12 @@ class UserDashboardController extends Controller
         $running = ClassSchedule::where(['level'=>student()->level,'start'=>1])->first();
         if($running){
             $onging = OngoingClass::where('user_id', student()->id)->where('schedule_id', $running->id)->first();
+            $attended = Attendance::where('schedule_id', $running->id)->where('student_id', student()->id)->first();
         }else{
             $onging = null;
+            $attended = null;
         }
+        
 
        
         return view('users.Student.Pages.Dashboard.student-dashboard',
@@ -34,7 +38,8 @@ class UserDashboardController extends Controller
                         'courses' => $courses,
                         'schedules' => $schedules,
                         'running' => $running,
-                        'onging' => $onging
+                        'onging' => $onging,
+                        'attended' => $attended
                         
                     ]);
     }
